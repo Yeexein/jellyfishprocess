@@ -11,7 +11,6 @@
         /* --- 全局与基础样式 --- */
         :root {
             --bg-color: #eef2f7;
-            /* [更新] 颜色从紫色变更为蓝色 */
             --primary-color: #4A90E2; 
             --text-color: #5b5b5b;
             --shadow-light: #ffffff;
@@ -146,15 +145,30 @@
 
         /* 答题页 */
         #quiz-screen {
-            justify-content: flex-start;
-            padding-top: 5vh;
+            justify-content: center; /* [修改] 改为 center 实现垂直居中 */
+            /* padding-top: 5vh; */   /* [删除] 移除固定的顶部内边距 */
             overflow-y: auto;
         }
+
 
         #quiz-form {
             width: 100%;
             max-width: 600px;
         }
+        
+        /* [新增] 答题步骤样式 */
+        .quiz-step {
+            display: none; /* 默认隐藏所有步骤 */
+            width: 100%;
+        }
+        .quiz-step.active {
+            display: block; /* 只显示当前活动步骤 */
+        }
+        .next-btn {
+            width: 100%;
+            margin-top: 20px;
+        }
+
 
         .question {
             background: var(--bg-color);
@@ -201,7 +215,6 @@
             border-radius: 50%;
         }
         
-        /* [更新] 选中的圆点颜色会自动跟随 --primary-color 变量 */
         .option input:checked + .custom-check::after {
             content: '';
             position: absolute;
@@ -229,13 +242,11 @@
             text-align: center;
             cursor: pointer;
             transition: background-color 0.2s;
-            
-            /* --- 新增和修改的样式 --- */
-            display: flex; /* 使用 Flexbox 布局 */
-            flex-direction: column; /* 元素垂直排列 */
-            justify-content: center; /* 垂直居中 */
-            align-items: center; /* 水平居中 */
-            min-height: 120px; /* 给予一个最小高度，防止内容挤压 */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center; 
+            min-height: 120px;
         }
 
         .upload-area:hover {
@@ -278,7 +289,8 @@
              color: #ff6b6b;
         }
 
-        #success-screen h2, #failure-screen h2, #cooldown-screen h2 {
+        #success-screen h2, #failure-screen h2, #cooldown-screen h2,
+        #failure-rules-screen h2, #failure-short-cooldown-screen h2 {
             margin-bottom: 20px;
         }
         
@@ -299,7 +311,7 @@
              font-weight: bold;
         }
 
-        #copy-button {
+        #copy-button, #back-to-rules-btn {
             margin-top: 25px;
         }
     </style>
@@ -336,93 +348,123 @@
     <!-- 答题界面 -->
     <div id="quiz-screen" class="page">
         <form id="quiz-form" novalidate>
-            <div class="question fade-in-text">
-                <p>1. 你在使用的AI软件/游戏有哪些？ (多选)</p>
-                <div class="options">
-                    <label class="option"><input type="checkbox" name="q1" value="EVE"><span class="custom-check"></span> EVE</label>
-                    <label class="option"><input type="checkbox" name="q1" value="Ephone"><span class="custom-check"></span> Ephone</label>
-                    <label class="option"><input type="checkbox" name="q1" value="33聊天室"><span class="custom-check"></span> 33聊天室</label>
-                    <label class="option"><input type="checkbox" name="q1" value="koko"><span class="custom-check"></span> koko</label>
-                    <label class="option"><input type="checkbox" name="q1" value="jrsy"><span class="custom-check"></span> jrsy</label>
-                    <label class="option"><input type="checkbox" name="q1" value="章鱼机"><span class="custom-check"></span> 章鱼机</label>
-                    <label class="option"><input type="checkbox" name="q1" value="喵喵机"><span class="custom-check"></span> 喵喵机</label>
-                    <label class="option"><input type="checkbox" name="q1" value="糯米机"><span class="custom-check"></span> 糯米机</label>
-                    <label class="option"><input type="checkbox" name="q1" value="慕慕"><span class="custom-check"></span> 慕慕</label>
-                    <label class="option"><input type="checkbox" name="q1" value="37chat"><span class="custom-check"></span> 37chat</label>
-                    <label class="option"><input type="checkbox" name="q1" value="star"><span class="custom-check"></span> Star小手机</label>
-                    <label class="option"><input type="checkbox" name="q1" value="loveme"><span class="custom-check"></span> Loveme</label>
-                    <label class="option"><input type="checkbox" name="q1" value="SillyTavern"><span class="custom-check"></span> SillyTavern</label>
-                    <label class="option"><input type="checkbox" name="q1" value="Tavo"><span class="custom-check"></span> Tavo</label>
-                     <label class="option"><input type="checkbox" name="q1" value="Mufy"><span class="custom-check"></span> Mufy</label>
-                    <label class="option"><input type="checkbox" name="q1" value="other"><span class="custom-check"></span> 其他</label>
+            <!-- 步骤 1 -->
+            <div class="quiz-step active">
+                <div class="question fade-in-text">
+                    <p>1. 你在使用的AI软件/游戏有哪些？ (多选)</p>
+                    <div class="options">
+                        <label class="option"><input type="checkbox" name="q1" value="EVE"><span class="custom-check"></span> EVE</label>
+                        <label class="option"><input type="checkbox" name="q1" value="Ephone"><span class="custom-check"></span> Ephone</label>
+                        <label class="option"><input type="checkbox" name="q1" value="33聊天室"><span class="custom-check"></span> 33聊天室</label>
+                        <label class="option"><input type="checkbox" name="q1" value="koko"><span class="custom-check"></span> koko</label>
+                        <label class="option"><input type="checkbox" name="q1" value="jrsy"><span class="custom-check"></span> jrsy</label>
+                        <label class="option"><input type="checkbox" name="q1" value="章鱼机"><span class="custom-check"></span> 章鱼机</label>
+                        <label class="option"><input type="checkbox" name="q1" value="喵喵机"><span class="custom-check"></span> 喵喵机</label>
+                        <label class="option"><input type="checkbox" name="q1" value="糯米机"><span class="custom-check"></span> 糯米机</label>
+                        <label class="option"><input type="checkbox" name="q1" value="慕慕"><span class="custom-check"></span> 慕慕</label>
+                        <label class="option"><input type="checkbox" name="q1" value="37chat"><span class="custom-check"></span> 37chat</label>
+                        <label class="option"><input type="checkbox" name="q1" value="star"><span class="custom-check"></span> Star小手机</label>
+                        <label class="option"><input type="checkbox" name="q1" value="loveme"><span class="custom-check"></span> Loveme</label>
+                        <label class="option"><input type="checkbox" name="q1" value="SillyTavern"><span class="custom-check"></span> SillyTavern</label>
+                        <label class="option"><input type="checkbox" name="q1" value="Tavo"><span class="custom-check"></span> Tavo</label>
+                        <label class="option"><input type="checkbox" name="q1" value="Mufy"><span class="custom-check"></span> Mufy</label>
+                        <label class="option"><input type="checkbox" name="q1" value="other"><span class="custom-check"></span> 其他</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
 
-            <div class="question fade-in-text" style="animation-delay: 0.1s;">
-                <p>2. API是什么？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q2" value="wrong1"><span class="custom-check"></span> 一种AI聊天的专用软件</label>
-                    <label class="option"><input type="radio" name="q2" value="correct"><span class="custom-check"></span> 用于连接前端和AI模型</label>
-                    <label class="option"><input type="radio" name="q2" value="wrong2"><span class="custom-check"></span> 一个包含AI模型的完整程序包</label>
+            <!-- 步骤 2 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>2. API是什么？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q2" value="wrong1"><span class="custom-check"></span> 一种AI聊天的专用软件</label>
+                        <label class="option"><input type="radio" name="q2" value="correct"><span class="custom-check"></span> 用于连接前端和AI模型</label>
+                        <label class="option"><input type="radio" name="q2" value="wrong2"><span class="custom-check"></span> 一个包含AI模型的完整程序包</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
             
-            <div class="question fade-in-text" style="animation-delay: 0.2s;">
-                <p>3. HTML通常怎么使用？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q3" value="wrong1"><span class="custom-check"></span> 放在聊天第一句话里</label>
-                    <label class="option"><input type="radio" name="q3" value="correct"><span class="custom-check"></span> 复制粘贴进提示词/世界书</label>
-                     <label class="option"><input type="radio" name="q3" value="wrong2"><span class="custom-check"></span> 在软件设置里找到导入按钮</label>
+            <!-- 步骤 3 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>3. HTML通常怎么使用？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q3" value="wrong1"><span class="custom-check"></span> 放在聊天第一句话里</label>
+                        <label class="option"><input type="radio" name="q3" value="correct"><span class="custom-check"></span> 复制粘贴进提示词/世界书</label>
+                        <label class="option"><input type="radio" name="q3" value="wrong2"><span class="custom-check"></span> 在软件设置里找到导入按钮</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
 
-            <div class="question fade-in-text" style="animation-delay: 0.3s;">
-                <p>4. 你是否已经游玩过小手机？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q4" value="correct"><span class="custom-check"></span> 玩过了</label>
-                    <label class="option"><input type="radio" name="q4" value="wrong"><span class="custom-check"></span> 还没有</label>
+            <!-- 步骤 4 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>4. 你是否已经游玩过小手机？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q4" value="correct"><span class="custom-check"></span> 玩过了</label>
+                        <label class="option"><input type="radio" name="q4" value="wrong"><span class="custom-check"></span> 还没有</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
             
-            <div class="question fade-in-text" style="animation-delay: 0.4s;">
-                <p>5. 以下哪一项是群内不能做的？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q5" value="wrong1"><span class="custom-check"></span> 聊天</label>
-                    <label class="option"><input type="radio" name="q5" value="wrong2"><span class="custom-check"></span> 推荐API</label>
-                    <label class="option"><input type="radio" name="q5" value="correct"><span class="custom-check"></span> 打卡</label>
-                    <label class="option"><input type="radio" name="q5" value="wrong3"><span class="custom-check"></span> 聊与AI无关话题</label>
-                    <label class="option"><input type="radio" name="q5" value="wrong4"><span class="custom-check"></span> 分享自制美化</label>
+            <!-- 步骤 5 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>5. 以下哪一项是群内不能做的？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q5" value="wrong1"><span class="custom-check"></span> 聊天</label>
+                        <label class="option"><input type="radio" name="q5" value="wrong2"><span class="custom-check"></span> 推荐API</label>
+                        <label class="option"><input type="radio" name="q5" value="correct"><span class="custom-check"></span> 打卡</label>
+                        <label class="option"><input type="radio" name="q5" value="wrong3"><span class="custom-check"></span> 聊与AI无关话题</label>
+                        <label class="option"><input type="radio" name="q5" value="wrong4"><span class="custom-check"></span> 分享自制美化</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
 
-            <div class="question fade-in-text" style="animation-delay: 0.5s;">
-                <p>6. 本网页是什么？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q6" value="wrong1"><span class="custom-check"></span> 免费小手机</label>
-                    <label class="option"><input type="radio" name="q6" value="wrong2"><span class="custom-check"></span> 付费小手机</label>
-                    <label class="option"><input type="radio" name="q6" value="correct"><span class="custom-check"></span> 小手机集合工具</label>
+            <!-- 步骤 6 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>6. 本网页是什么？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q6" value="wrong1"><span class="custom-check"></span> 免费小手机</label>
+                        <label class="option"><input type="radio" name="q6" value="wrong2"><span class="custom-check"></span> 付费小手机</label>
+                        <label class="option"><input type="radio" name="q6" value="correct"><span class="custom-check"></span> 小手机集合工具</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
 
-            <div class="question fade-in-text" style="animation-delay: 0.6s;">
-                <p>7. 水母岛网页内是否提供小手机链接？ (单选)</p>
-                <div class="options">
-                    <label class="option"><input type="radio" name="q7" value="wrong"><span class="custom-check"></span> 提供</label>
-                    <label class="option"><input type="radio" name="q7" value="correct"><span class="custom-check"></span> 不提供</label>
+            <!-- 步骤 7 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>7. 水母岛网页内是否提供小手机链接？ (单选)</p>
+                    <div class="options">
+                        <label class="option"><input type="radio" name="q7" value="wrong"><span class="custom-check"></span> 提供</label>
+                        <label class="option"><input type="radio" name="q7" value="correct"><span class="custom-check"></span> 不提供</label>
+                    </div>
                 </div>
+                <button type="button" class="neumorphism-button next-btn">下一题</button>
             </div>
 
-            <div class="question fade-in-text" style="animation-delay: 0.7s;">
-                <p>8. 请上传1-3张游玩小手机的证明。</p>
-                <!-- 使用 div 嵌套来更好地控制文本布局 -->
-                <label for="file-upload" class="upload-area">
-                    <div style="font-weight: 500;">点击此处选择图片</div>
-                    <div style="font-size: 12px; margin-top: 8px;">包括但不限于主屏幕图标、聊天记录等证明。<br>提供初始化小手机界面将不予通过（须有美化或游玩痕迹）</div>
-                </label>
-                <input id="file-upload" type="file" multiple accept="image/*" style="display: none;">
-                <div id="file-list"></div>
+            <!-- 步骤 8 -->
+            <div class="quiz-step">
+                <div class="question fade-in-text">
+                    <p>8. 请上传1-3张游玩小手机的证明。</p>
+                    <label for="file-upload" class="upload-area">
+                        <div style="font-weight: 500;">点击此处选择图片</div>
+                        <div style="font-size: 12px; margin-top: 8px;">包括但不限于主屏幕图标、聊天记录等证明。<br>提供初始化小手机界面将不予通过<br>（须有美化或游玩痕迹）</div>
+                    </label>
+                    <input id="file-upload" type="file" multiple accept="image/*" style="display: none;">
+                    <div id="file-list"></div>
+                </div>
+                <button type="submit" class="neumorphism-button" style="width: 100%; padding: 20px; font-size: 18px; margin-top: 20px;">提交审核</button>
             </div>
-            <button type="submit" class="neumorphism-button" style="width: 100%; padding: 20px; font-size: 18px; margin-top: 20px;">提交审核</button>
         </form>
     </div>
 
@@ -439,14 +481,32 @@
             <h2>恭喜你，获得进群资格！</h2>
             <p>请复制下面的群号加入：</p>
             <div id="group-number" class="neumorphism-result-box">563191005</div>
-            <!-- [新增] 密钥显示 -->
             <p style="margin-top:20px;">进群答案密钥：</p>
             <div class="neumorphism-result-box">乌拉拉乌嘿嘿</div>
             <button id="copy-button" class="neumorphism-button">点击复制群号</button>
         </div>
     </div>
 
-    <!-- 失败界面 -->
+    <!-- [新增] 失败界面 - 返回规则 -->
+    <div id="failure-rules-screen" class="page">
+        <div class="neumorphism-card fade-in-text failure">
+             <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <h2>抱歉，回答错误</h2>
+            <p>您的回答未能通过审核。请返回并重新阅读“进群须知”后再次尝试。</p>
+            <button id="back-to-rules-btn" class="neumorphism-button">返回须知</button>
+        </div>
+    </div>
+
+    <!-- [新增] 失败界面 - 1天冷却 -->
+    <div id="failure-short-cooldown-screen" class="page">
+        <div class="neumorphism-card fade-in-text failure">
+             <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <h2>抱歉，回答错误</h2>
+            <p>请您先了解小手机的基础信息后再尝试进群。冷却期为24小时。</p>
+        </div>
+    </div>
+
+    <!-- 失败界面 (7天) -->
     <div id="failure-screen" class="page">
         <div class="neumorphism-card fade-in-text failure">
              <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
@@ -459,7 +519,6 @@
     <div id="cooldown-screen" class="page">
          <div class="neumorphism-card fade-in-text failure">
             <svg class="result-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-            <!-- [更新] 冷却提示文案和显示内容 -->
             <h2>冷静期未结束</h2>
             <p>请在冷却期过后尝试。冷却期结束于：<br><strong id="cooldown-date" style="font-size: 1.2em; line-height: 2;"></strong></p>
         </div>
@@ -467,6 +526,7 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    // --- 页面元素 ---
     const pages = document.querySelectorAll('.page');
     const toRulesBtn = document.getElementById('to-rules');
     const toQuizBtn = document.getElementById('to-quiz');
@@ -476,29 +536,91 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyButton = document.getElementById('copy-button');
     const groupNumber = document.getElementById('group-number');
     const cooldownDateEl = document.getElementById('cooldown-date');
+    const backToRulesBtn = document.getElementById('back-to-rules-btn');
+    const nextButtons = document.querySelectorAll('.next-btn');
+    const quizSteps = document.querySelectorAll('.quiz-step');
 
-    const COOLDOWN_PERIOD = 7 * 24 * 60 * 60 * 1000; // 7天
+    // --- 状态与常量 ---
+    const COOLDOWN_PERIOD_LONG = 7 * 24 * 60 * 60 * 1000;  // 7天
+    const COOLDOWN_PERIOD_SHORT = 1 * 24 * 60 * 60 * 1000; // 1天
     let visitorId = '';
+    let currentStep = 0;
 
     // --- 页面切换逻辑 ---
     function showPage(pageId) {
-        pages.forEach(page => {
-            page.classList.remove('active');
-        });
+        pages.forEach(page => page.classList.remove('active'));
         const targetPage = document.getElementById(pageId);
         if (targetPage) {
             targetPage.classList.add('active');
         }
     }
 
+    // --- 答题流程控制 ---
+    function showStep(index) {
+        quizSteps.forEach((step, i) => {
+            step.classList.toggle('active', i === index);
+        });
+        currentStep = index;
+    }
+
+    function validateStep(stepIndex) {
+        const step = quizSteps[stepIndex];
+        if (!step) return false;
+
+        // 验证多选题 (Q1)
+        if (stepIndex === 0) { 
+            if (step.querySelectorAll('input[name="q1"]:checked').length === 0) {
+                alert('请至少选择一个选项。');
+                return false;
+            }
+        }
+        // 验证单选题 (Q2-Q7)
+        else if (stepIndex > 0 && stepIndex < 7) { 
+            const radioName = `q${stepIndex + 1}`;
+            if (!step.querySelector(`input[name="${radioName}"]:checked`)) {
+                alert('请选择一个答案。');
+                return false;
+            }
+        }
+        // 验证文件上传 (Q8)
+        else if (stepIndex === 7) { 
+            if (fileUpload.files.length === 0) {
+                alert('请上传证明文件。');
+                return false;
+            }
+            if (fileUpload.files.length > 3) {
+                alert('最多只能上传3张图片。');
+                return false;
+            }
+        }
+        return true;
+    }
+
+    nextButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
+            if (validateStep(index)) {
+                showStep(index + 1);
+            }
+        });
+    });
+
+    // --- 事件监听 ---
     toRulesBtn.addEventListener('click', () => showPage('rules-screen'));
-    toQuizBtn.addEventListener('click', () => showPage('quiz-screen'));
+    toQuizBtn.addEventListener('click', () => {
+        showPage('quiz-screen');
+        showStep(0); // 确保从第一题开始
+    });
+    backToRulesBtn.addEventListener('click', () => showPage('rules-screen'));
+
 
     // --- 文件上传显示 ---
     fileUpload.addEventListener('change', () => {
         fileList.innerHTML = '';
         if (fileUpload.files.length > 0) {
-            const files = Array.from(fileUpload.files).slice(0, 3); // 最多显示3个
+            const files = Array.from(fileUpload.files).slice(0, 3);
+            if (fileUpload.files.length > 3) {
+                alert('最多只能选择3张图片，将只处理前3张。');
+            }
             files.forEach(file => {
                 const fileItem = document.createElement('p');
                 fileItem.textContent = `已选择: ${file.name}`;
@@ -507,66 +629,65 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 答题逻辑 ---
+    // --- 最终提交逻辑 ---
     quizForm.addEventListener('submit', (e) => {
         e.preventDefault();
-
-        // [新增] 提交前检查所有题目是否都已回答
-        const isFormComplete = checkFormCompleteness();
-        if (!isFormComplete) {
-            alert("请回答所有问题并上传证明文件后再提交！");
-            return; // 阻止提交
-        }
+        
+        // 验证最后一步（文件上传）
+        if (!validateStep(currentStep)) return;
 
         showPage('loading-screen');
 
         setTimeout(() => {
             const result = validateQuiz();
+            const now = new Date().getTime();
+
             if (result.passed) {
                 showPage('success-screen');
             } else {
-                const now = new Date().getTime();
-                localStorage.setItem(visitorId, now);
-                showPage('failure-screen');
+                // 根据错误原因执行不同逻辑
+                if (result.reason === 'q5 wrong') {
+                    // 第5题错，返回规则页，无冷却
+                    showPage('failure-rules-screen');
+                } else if (['q2 wrong', 'q3 wrong', 'q4 wrong'].includes(result.reason)) {
+                    // 第2,3,4题错，1天冷却
+                    const cooldownEndTime = now + COOLDOWN_PERIOD_SHORT;
+                    localStorage.setItem(visitorId, cooldownEndTime);
+                    showPage('failure-short-cooldown-screen');
+                } else {
+                    // 其他错误，7天冷却
+                    const cooldownEndTime = now + COOLDOWN_PERIOD_LONG;
+                    localStorage.setItem(visitorId, cooldownEndTime);
+                    showPage('failure-screen');
+                }
             }
         }, 5000); // 模拟5秒审核
     });
     
-    // [新增] 检查表单完整性的函数
-    function checkFormCompleteness() {
-        // 检查多选题 (至少选一个)
-        if (document.querySelectorAll('input[name="q1"]:checked').length === 0) return false;
-        
-        // 检查所有单选题
-        const radioQuestions = ['q2', 'q3', 'q4', 'q5', 'q6', 'q7'];
-        for (const qName of radioQuestions) {
-            if (!document.querySelector(`input[name="${qName}"]:checked`)) {
-                return false;
-            }
-        }
-
-        // 检查文件是否上传
-        if (fileUpload.files.length === 0) return false;
-
-        return true; // 所有检查通过
-    }
-
+    // 整体验证函数，在提交时调用
     function validateQuiz() {
-        const q1Answers = Array.from(document.querySelectorAll('input[name="q1"]:checked')).map(el => el.value);
-        if (q1Answers.length === 1 && (q1Answers.includes('star') || q1Answers.includes('loveme'))) {
-            return { passed: false, reason: 'Q1' };
-        }
-
         const correctAnswers = {
             q2: 'correct', q3: 'correct', q4: 'correct',
             q5: 'correct', q6: 'correct', q7: 'correct'
         };
 
+        // 检查 Q1 (这个规则比较特殊，单独处理)
+        const q1Answers = Array.from(document.querySelectorAll('input[name="q1"]:checked')).map(el => el.value);
+        if (q1Answers.length === 1 && (q1Answers.includes('star') || q1Answers.includes('loveme'))) {
+            return { passed: false, reason: 'q1 wrong' };
+        }
+
+        // 检查 Q2, Q3, Q4, Q5, Q6, Q7
         for (const q in correctAnswers) {
             const userAnswer = document.querySelector(`input[name="${q}"]:checked`);
             if (!userAnswer || userAnswer.value !== correctAnswers[q]) {
-                return { passed: false, reason: (`${q} wrong`) };
+                return { passed: false, reason: `${q} wrong` };
             }
+        }
+
+        // 检查文件上传
+        if (fileUpload.files.length === 0) {
+            return { passed: false, reason: 'no file' };
         }
         
         return { passed: true };
@@ -585,34 +706,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 冷却期逻辑 ---
+    // --- [重构] 冷却期逻辑 ---
     async function checkCooldown() {
         if (window.FingerprintJS) {
             const fp = await FingerprintJS.load();
             const result = await fp.get();
             visitorId = result.visitorId;
 
-            const lastAttemptTime = localStorage.getItem(visitorId);
-            if (lastAttemptTime) {
+            // localStorage现在存储的是冷却结束时间
+            const cooldownEndTime = localStorage.getItem(visitorId);
+            if (cooldownEndTime) {
                 const now = new Date().getTime();
-                const timePassed = now - parseInt(lastAttemptTime, 10);
                 
-                if (timePassed < COOLDOWN_PERIOD) {
-                    // [更新] 显示冷却结束日期而不是倒计时
-                    displayCooldownEndDate(parseInt(lastAttemptTime, 10));
+                if (now < parseInt(cooldownEndTime, 10)) {
+                    // 仍在冷却期内
+                    displayCooldownEndDate(parseInt(cooldownEndTime, 10));
                     showPage('cooldown-screen');
                     return true;
+                } else {
+                    // 冷却期已过，清除记录
+                    localStorage.removeItem(visitorId);
                 }
             }
         }
         return false;
     }
     
-    // [更新] 新函数，用于计算并显示冷却结束日期
-    function displayCooldownEndDate(startTime) {
-        const endTime = startTime + COOLDOWN_PERIOD;
+    // [重构] 显示冷却结束日期
+    function displayCooldownEndDate(endTime) {
         const endDate = new Date(endTime);
-        // 使用 toLocaleString 来显示为本地化的日期和时间格式
         cooldownDateEl.textContent = endDate.toLocaleString('zh-CN', {
             year: 'numeric', month: 'long', day: 'numeric', 
             hour: '2-digit', minute: '2-digit', second: '2-digit'
@@ -633,5 +755,4 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 </body>
-
 </html>
