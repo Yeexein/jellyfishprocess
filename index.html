@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>水母岛屿通行许可</title>
+    <title>水母岛审核</title>
     <!-- 引入 FingerprintJS 用于生成设备指纹 -->
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 
@@ -321,11 +321,11 @@
     <div id="rules-screen" class="page">
         <div class="neumorphism-card fade-in-text">
             <h2>进群须知</h2>
-            <p style="margin-bottom: 20px;">请仔细阅读以下条款，后续环节会进行提问。</p>
+            <p style="margin-bottom: 20px;">请仔细阅读以下条款，后续环节会进行提问。单选题需全部正确。</p>
             <ul>
                 <li>1. 本网页并非小手机，也不提供任何小手机的文件或链接。</li>
                 <li>2. 群内禁止打卡，打卡达到两次会被踢群，需要找管理员提供使用网页的截屏或者证明二次进群。</li>
-                <li>3. 群内禁止使用内置API或商业化的小手机进群，例如Star、Loveme。</li>
+                <li>3. 群内禁止使用内置API或商业化的小手机进群。</li>
                 <li>4. 禁止二传网页链接。</li>
             </ul>
             <button id="to-quiz" class="neumorphism-button">已阅并知晓</button>
@@ -367,7 +367,7 @@
             </div>
             
             <div class="question fade-in-text" style="animation-delay: 0.2s;">
-                <p>3. HTML怎么使用？ (单选)</p>
+                <p>3. HTML通常怎么使用？ (单选)</p>
                 <div class="options">
                     <label class="option"><input type="radio" name="q3" value="wrong1"><span class="custom-check"></span> 放在聊天第一句话里</label>
                     <label class="option"><input type="radio" name="q3" value="correct"><span class="custom-check"></span> 复制粘贴进提示词/世界书</label>
@@ -386,9 +386,9 @@
             <div class="question fade-in-text" style="animation-delay: 0.4s;">
                 <p>5. 以下哪一项是群内不能做的？ (单选)</p>
                 <div class="options">
-                    <label class="option"><input type="radio" name="q5" value="correct"><span class="custom-check"></span> 打卡</label>
                     <label class="option"><input type="radio" name="q5" value="wrong1"><span class="custom-check"></span> 聊天</label>
                     <label class="option"><input type="radio" name="q5" value="wrong2"><span class="custom-check"></span> 推荐API</label>
+                    <label class="option"><input type="radio" name="q5" value="correct"><span class="custom-check"></span> 打卡</label>
                     <label class="option"><input type="radio" name="q5" value="wrong3"><span class="custom-check"></span> 聊与AI无关话题</label>
                     <label class="option"><input type="radio" name="q5" value="wrong4"><span class="custom-check"></span> 分享自制美化</label>
                 </div>
@@ -416,7 +416,7 @@
                 <!-- 使用 div 嵌套来更好地控制文本布局 -->
                 <label for="file-upload" class="upload-area">
                     <div style="font-weight: 500;">点击此处选择图片</div>
-                    <div style="font-size: 12px; margin-top: 8px;">(包括但不限于主屏幕图标、聊天记录)</div>
+                    <div style="font-size: 12px; margin-top: 8px;">包括但不限于主屏幕图标、聊天记录等证明。<br>提供初始化小手机界面将不予通过（须有美化或游玩痕迹）</div>
                 </label>
                 <input id="file-upload" type="file" multiple accept="image/*" style="display: none;">
                 <div id="file-list"></div>
@@ -632,4 +632,5 @@ document.addEventListener('DOMContentLoaded', () => {
 </script>
 
 </body>
+
 </html>
